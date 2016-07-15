@@ -60,8 +60,12 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch or(WikiSearch that) {
-        // FILL THIS IN!
-		return null;
+        Map<String, Integer> match = new HashMap<String,Integer>(map);
+        for (String item: that.map.keySet()){
+            int relevance = totalRelevance(this.getRelevance(item), that.getRelevance(item));
+            match.put(item, relevance);
+        }
+		return new WikiSearch(match);
 	}
 	
 	/**
@@ -71,8 +75,14 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch and(WikiSearch that) {
-        // FILL THIS IN!
-		return null;
+        Map<String, Integer> match = new HashMap<String, Integer>();
+        for (String item: map.keySet()) {
+            if (that.map.containsKey(item)) {
+                int relevance = totalRelevance(this.map.get(item), that.map.get(item));
+                match.put(item, relevance);
+            }
+        }
+        return new WikiSearch(match);
 	}
 	
 	/**
@@ -82,8 +92,11 @@ public class WikiSearch {
 	 * @return New WikiSearch object.
 	 */
 	public WikiSearch minus(WikiSearch that) {
-        // FILL THIS IN!
-		return null;
+        Map<String, Integer> diff = new HashMap<String, Integer>(map);
+        for (String item: that.map.keySet()) {
+            diff.remove(item);
+        }
+        return new WikiSearch(diff);
 	}
 	
 	/**
@@ -104,8 +117,16 @@ public class WikiSearch {
 	 * @return List of entries with URL and relevance.
 	 */
 	public List<Entry<String, Integer>> sort() {
-        // FILL THIS IN!
-		return null;
+        List<Entry<String, Integer>> entries = new LinkedList<Entry<String, Integer>>(map.entrySet());
+        
+        Comparator<Entry<String, Integer>> comparator = new Comparator<Entry<String, Integer>>() {
+            public int compare(Entry<String, Integer> e1, Entry<String, Integer> e2) {
+                return e1.getValue().compareTo(e2.getValue());
+            }
+        };
+        
+        Collections.sort(entries, comparator);
+        return entries;
 	}
 
 	/**
